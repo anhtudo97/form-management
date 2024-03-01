@@ -3,7 +3,7 @@ import { RegistrationForm } from "./RegistrationForm";
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-xl">
+    <div className="mx-auto max-w-xl my-8">
       <RegistrationForm />
     </div>
   );

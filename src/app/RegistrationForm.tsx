@@ -28,9 +28,19 @@ export const RegistrationForm = () => {
         }
     });
 
+    // inside of RegistrationForm.tsx
     const onSubmit = async (data: z.infer<typeof schema>) => {
-        console.log(data);
+        fetch("/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => console.log(data));
     };
+
     return <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="grid grid-cols-2 gap-4">
