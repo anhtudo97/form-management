@@ -18,7 +18,13 @@ import {
 } from "@/components/ui/form";
 
 
-export const RegistrationForm = () => {
+export const RegistrationForm = ({ onDataAction }: {
+    onDataAction: (data: z.infer<typeof schema>) => Promise<{
+        message: string;
+        user?: z.infer<typeof schema>;
+        issues?: string[];
+    }>;
+}) => {
     const form = useForm<z.infer<typeof schema>>({
         resolver: zodResolver(schema),
         defaultValues: {
@@ -30,16 +36,17 @@ export const RegistrationForm = () => {
 
     // inside of RegistrationForm.tsx
     const onSubmit = async (data: z.infer<typeof schema>) => {
-        const formData = new FormData(); // Create a new FormData object
-        formData.append("first", data.first);
-        formData.append("last", data.last);
-        formData.append("email", data.email);
-        fetch("/api/registerForm", {
-            method: "POST",
-            body: formData
-        })
-            .then(response => response.json())
-            .then(data => console.log(data));
+        console.log(await onDataAction(data));
+        // const formData = new FormData(); // Create a new FormData object
+        // formData.append("first", data.first);
+        // formData.append("last", data.last);
+        // formData.append("email", data.email);
+        // fetch("/api/registerForm", {
+        //     method: "POST",
+        //     body: formData
+        // })
+        //     .then(response => response.json())
+        //     .then(data => console.log(data));
     };
 
     return <Form {...form}>
