@@ -30,12 +30,13 @@ export const RegistrationForm = () => {
 
     // inside of RegistrationForm.tsx
     const onSubmit = async (data: z.infer<typeof schema>) => {
-        fetch("/api/register", {
+        const formData = new FormData(); // Create a new FormData object
+        formData.append("first", data.first);
+        formData.append("last", data.last);
+        formData.append("email", data.email);
+        fetch("/api/registerForm", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
+            body: formData
         })
             .then(response => response.json())
             .then(data => console.log(data));
