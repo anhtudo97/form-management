@@ -26,7 +26,7 @@ export default function Home() {
   }, formData: FormData) => {
     "use server";
     const data = Object.fromEntries(formData);
-    const parsed = schema.safeParse(data);
+    const parsed = await schema.safeParseAsync(data);
 
     if (parsed.success) {
       console.log("User registered");

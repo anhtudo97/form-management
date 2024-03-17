@@ -51,7 +51,8 @@ export const RegistrationForm = ({ onDataAction, onFormDataAction }: {
         defaultValues: {
             first: "",
             last: "",
-            email: ""
+            email: "",
+            zipcode: ""
         }
     });
 
@@ -109,6 +110,21 @@ export const RegistrationForm = ({ onDataAction, onFormDataAction }: {
                     )}
                 />
             </div>
+            <FormField
+                control={form.control}
+                name="zipcode"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Zipcode</FormLabel>
+                        <FormControl>
+                            <Input placeholder="" {...field} />
+                        </FormControl>
+                        <FormDescription>Your zipcode (NNNNN).</FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
             <FormField
                 control={form.control}
                 name="email"

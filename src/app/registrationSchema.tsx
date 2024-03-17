@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { validateZipCode } from "./validateZipCode";
 
 export const schema = z.object({
     first: z.string().trim().min(1, {
@@ -9,5 +10,8 @@ export const schema = z.object({
     }),
     email: z.string().trim().email({
         message: "Invalid email address"
+    }),
+    zipcode: z.string().refine(validateZipCode, {
+        message: "Invalid zipcode",
     }),
 });
