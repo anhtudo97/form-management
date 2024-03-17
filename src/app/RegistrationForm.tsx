@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -16,15 +17,35 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import { useRef } from "react";
 
 
-export const RegistrationForm = ({ onDataAction }: {
+export const RegistrationForm = ({ onDataAction, onFormDataAction }: {
     onDataAction: (data: z.infer<typeof schema>) => Promise<{
         message: string;
         user?: z.infer<typeof schema>;
         issues?: string[];
     }>;
+    onFormDataAction: (
+        initalState: {
+            message: string;
+            user?: z.infer<typeof schema>;
+            issues?: string[];
+        }
+        , data: FormData) => Promise<{
+            message: string;
+            user?: z.infer<typeof schema>;
+            issues?: string[];
+        }>;
 }) => {
+    // Above the return inside of RegistrationForm
+    const formRef = useRef<HTMLFormElement>(null);
+
+    // inside of RegistrationForm
+    const [state, formAction] = useFormState(onFormDataAction, {
+        message: ""
+    });
+
     const form = useForm<z.infer<typeof schema>>({
         resolver: zodResolver(schema),
         defaultValues: {
@@ -36,21 +57,28 @@ export const RegistrationForm = ({ onDataAction }: {
 
     // inside of RegistrationForm.tsx
     const onSubmit = async (data: z.infer<typeof schema>) => {
-        console.log(await onDataAction(data));
-        // const formData = new FormData(); // Create a new FormData object
-        // formData.append("first", data.first);
-        // formData.append("last", data.last);
-        // formData.append("email", data.email);
+        // console.log(await onDataAction(data));
+        const formData = new FormData(); // Create a new FormData object
+        formData.append("first", data.first);
+        formData.append("last", data.last);
+        formData.append("email", data.email);
         // fetch("/api/registerForm", {
         //     method: "POST",
         //     body: formData
         // })
         //     .then(response => response.json())
         //     .then(data => console.log(data));
+        // console.log(await onFormDataAction(formData));
     };
 
     return <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div>{state?.message}</div>
+        <form
+            ref={formRef}
+            action={formAction}
+            onSubmit={form.handleSubmit(() => formRef?.current?.submit())}
+            className="space-y-8"
+        >
             <div className="grid grid-cols-2 gap-4">
                 <FormField
                     control={form.control}

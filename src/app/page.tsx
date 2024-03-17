@@ -19,10 +19,29 @@ export default function Home() {
       };
     }
   };
+  const onFormDataAction = async (initalState: {
+    message: string;
+    user?: z.infer<typeof schema>;
+    issues?: string[];
+  }, formData: FormData) => {
+    "use server";
+    const data = Object.fromEntries(formData);
+    const parsed = schema.safeParse(data);
+
+    if (parsed.success) {
+      console.log("User registered");
+      return { message: "User registered", user: parsed.data };
+    } else {
+      return {
+        message: "Invalid data",
+        issues: parsed.error.issues.map((issue) => issue.message),
+      };
+    }
+  };
 
   return (
     <div className="mx-auto max-w-xl my-8">
-      <RegistrationForm onDataAction={onDataAction} />
+      <RegistrationForm onDataAction={onDataAction} onFormDataAction={onFormDataAction} />
     </div>
   );
 }
